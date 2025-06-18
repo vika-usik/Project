@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', function() {
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
-
     const alerts = document.querySelectorAll('.alert:not(.alert-permanent)');
     alerts.forEach(function(alert) {
         setTimeout(function() {
@@ -12,18 +11,15 @@ document.addEventListener('DOMContentLoaded', function() {
             bsAlert.close();
         }, 5000);
     });
-
     const buttons = document.querySelectorAll('.btn');
     buttons.forEach(function(button) {
         button.addEventListener('mouseenter', function() {
             this.style.transform = 'translateY(-2px)';
         });
-        
         button.addEventListener('mouseleave', function() {
             this.style.transform = 'translateY(0)';
         });
     });
-    
     const refreshButton = document.querySelector('a[href*="refresh"]');
     if (refreshButton) {
         refreshButton.addEventListener('click', function() {
@@ -33,7 +29,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-
     const quoteForm = document.querySelector('form[action*="add_quote"]');
     if (quoteForm) {
         quoteForm.addEventListener('submit', function(e) {
@@ -47,7 +42,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-
     const usernameForm = document.querySelector('form[action*="set_username"]');
     if (usernameForm) {
         const usernameInput = usernameForm.querySelector('input[name="username"]');
@@ -60,8 +54,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     }
-
-
     const searchForm = document.querySelector('form[action*="index"]');
     if (searchForm) {
         const searchInput = searchForm.querySelector('input[name="search"]');
@@ -77,7 +69,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
-
     const removeFavoriteButtons = document.querySelectorAll('form[action*="remove_favorite"] button[type="submit"]');
     removeFavoriteButtons.forEach(function(button) {
         button.addEventListener('click', function(e) {
@@ -85,13 +76,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const confirmMessage = isUkrainian ? 
                 'Ви впевнені, що хочете видалити цю цитату з улюблених?' : 
                 'Are you sure you want to remove this quote from favorites?';
-            
             if (!confirm(confirmMessage)) {
                 e.preventDefault();
             }
         });
     });
-
     document.addEventListener('keydown', function(e) {
         // Ctrl/Cmd + R for refresh (prevent default and use our refresh)
         if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
@@ -101,7 +90,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 window.location.href = refreshLink.href;
             }
         }
-        
         if (e.key === 'Escape') {
             const searchInput = document.querySelector('input[name="search"]');
             if (searchInput && searchInput.value.trim() !== '') {
@@ -111,12 +99,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
-
 function shareQuote(text, author) {
     const shareText = `"${text}" - ${author}`;
     const shareUrl = window.location.origin;
-    
-    // Check if Web Share API is supported
     if (navigator.share) {
         navigator.share({
             title: document.documentElement.lang === 'uk' ? 'Цитата дня' : 'Quote of the Day',
@@ -130,9 +115,7 @@ function shareQuote(text, author) {
         fallbackShare(shareText, shareUrl);
     }
 }
-
 function fallbackShare(text, url) {
-    // Copy to clipboard
     if (navigator.clipboard) {
         const shareString = `${text}\n\n${url}`;
         navigator.clipboard.writeText(shareString).then(function() {
@@ -147,11 +130,9 @@ function fallbackShare(text, url) {
         showShareModal(text, url);
     }
 }
-
 function showShareModal(text, url) {
     const isUkrainian = document.documentElement.lang === 'uk';
     const shareString = `${text}\n\n${url}`;
-    
     const modalHtml = `
         <div class="modal fade" id="shareModal" tabindex="-1">
             <div class="modal-dialog">
@@ -180,28 +161,21 @@ function showShareModal(text, url) {
             </div>
         </div>
     `;
-    
     document.body.insertAdjacentHTML('beforeend', modalHtml);
-    
     const modal = new bootstrap.Modal(document.getElementById('shareModal'));
     modal.show();
-    
     document.getElementById('shareModal').addEventListener('hidden.bs.modal', function() {
         this.remove();
     });
 }
-
 function copyFromModal() {
     const textarea = document.querySelector('#shareModal textarea');
     textarea.select();
     document.execCommand('copy');
-    
     const isUkrainian = document.documentElement.lang === 'uk';
     showToast(isUkrainian ? 'Скопійовано!' : 'Copied!');
-    
     bootstrap.Modal.getInstance(document.getElementById('shareModal')).hide();
 }
-
 function showToast(message) {
     // Create toast
     const toastHtml = `
@@ -218,37 +192,29 @@ function showToast(message) {
             </div>
         </div>
     `;
-    
     document.body.insertAdjacentHTML('beforeend', toastHtml);
-    
     const toastElement = document.querySelector('.toast-container .toast');
     const toast = new bootstrap.Toast(toastElement);
     toast.show();
-    
     toastElement.addEventListener('hidden.bs.toast', function() {
         this.parentElement.remove();
     });
 }
-
 function initThemeToggle() {
     const themeToggle = document.querySelector('a[href*="toggle_theme"]');
     if (themeToggle) {
         themeToggle.addEventListener('click', function(e) {
             e.preventDefault();
-            
             const icon = this.querySelector('.fas');
             const originalClass = icon.className;
             icon.className = 'fas fa-spinner fa-spin';
-            
             setTimeout(() => {
                 window.location.href = this.href;
             }, 300);
         });
     }
 }
-
 document.addEventListener('DOMContentLoaded', initThemeToggle);
-
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
@@ -261,17 +227,14 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         }
     });
 });
-
 document.querySelectorAll('form').forEach(form => {
     form.addEventListener('submit', function() {
         const submitButton = this.querySelector('button[type="submit"]');
         if (submitButton && !submitButton.disabled) {
             const originalContent = submitButton.innerHTML;
             const loadingText = document.documentElement.lang === 'uk' ? 'Завантаження...' : 'Loading...';
-            
             submitButton.innerHTML = `<i class="fas fa-spinner fa-spin me-2"></i>${loadingText}`;
             submitButton.disabled = true;
-            
             setTimeout(() => {
                 submitButton.innerHTML = originalContent;
                 submitButton.disabled = false;
