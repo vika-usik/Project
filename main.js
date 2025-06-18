@@ -1,5 +1,3 @@
-// Main JavaScript functionality for the quote generator
-
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize tooltips
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
@@ -7,7 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 
-    // Auto-hide alerts after 5 seconds
     const alerts = document.querySelectorAll('.alert:not(.alert-permanent)');
     alerts.forEach(function(alert) {
         setTimeout(function() {
@@ -16,7 +13,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 5000);
     });
 
-    // Add smooth transitions to buttons
     const buttons = document.querySelectorAll('.btn');
     buttons.forEach(function(button) {
         button.addEventListener('mouseenter', function() {
@@ -27,8 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
             this.style.transform = 'translateY(0)';
         });
     });
-
-    // Add loading state to refresh button
+    
     const refreshButton = document.querySelector('a[href*="refresh"]');
     if (refreshButton) {
         refreshButton.addEventListener('click', function() {
@@ -39,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Form validation for custom quote
     const quoteForm = document.querySelector('form[action*="add_quote"]');
     if (quoteForm) {
         quoteForm.addEventListener('submit', function(e) {
@@ -54,7 +48,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Username form enhancement
     const usernameForm = document.querySelector('form[action*="set_username"]');
     if (usernameForm) {
         const usernameInput = usernameForm.querySelector('input[name="username"]');
@@ -68,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Search form enhancement
+
     const searchForm = document.querySelector('form[action*="index"]');
     if (searchForm) {
         const searchInput = searchForm.querySelector('input[name="search"]');
@@ -85,7 +78,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Add confirmation for favorite removal
     const removeFavoriteButtons = document.querySelectorAll('form[action*="remove_favorite"] button[type="submit"]');
     removeFavoriteButtons.forEach(function(button) {
         button.addEventListener('click', function(e) {
@@ -100,7 +92,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Add keyboard shortcuts
     document.addEventListener('keydown', function(e) {
         // Ctrl/Cmd + R for refresh (prevent default and use our refresh)
         if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
@@ -111,7 +102,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
-        // Escape to clear search
         if (e.key === 'Escape') {
             const searchInput = document.querySelector('input[name="search"]');
             if (searchInput && searchInput.value.trim() !== '') {
@@ -122,7 +112,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Share quote functionality
 function shareQuote(text, author) {
     const shareText = `"${text}" - ${author}`;
     const shareUrl = window.location.origin;
@@ -142,7 +131,6 @@ function shareQuote(text, author) {
     }
 }
 
-// Fallback share functionality
 function fallbackShare(text, url) {
     // Copy to clipboard
     if (navigator.clipboard) {
@@ -160,12 +148,10 @@ function fallbackShare(text, url) {
     }
 }
 
-// Show share modal
 function showShareModal(text, url) {
     const isUkrainian = document.documentElement.lang === 'uk';
     const shareString = `${text}\n\n${url}`;
     
-    // Create modal
     const modalHtml = `
         <div class="modal fade" id="shareModal" tabindex="-1">
             <div class="modal-dialog">
@@ -195,20 +181,16 @@ function showShareModal(text, url) {
         </div>
     `;
     
-    // Add modal to page
     document.body.insertAdjacentHTML('beforeend', modalHtml);
     
-    // Show modal
     const modal = new bootstrap.Modal(document.getElementById('shareModal'));
     modal.show();
     
-    // Remove modal when hidden
     document.getElementById('shareModal').addEventListener('hidden.bs.modal', function() {
         this.remove();
     });
 }
 
-// Copy from modal
 function copyFromModal() {
     const textarea = document.querySelector('#shareModal textarea');
     textarea.select();
@@ -220,7 +202,6 @@ function copyFromModal() {
     bootstrap.Modal.getInstance(document.getElementById('shareModal')).hide();
 }
 
-// Show toast notification
 function showToast(message) {
     // Create toast
     const toastHtml = `
@@ -238,33 +219,27 @@ function showToast(message) {
         </div>
     `;
     
-    // Add toast to page
     document.body.insertAdjacentHTML('beforeend', toastHtml);
     
-    // Show toast
     const toastElement = document.querySelector('.toast-container .toast');
     const toast = new bootstrap.Toast(toastElement);
     toast.show();
     
-    // Remove toast after it's hidden
     toastElement.addEventListener('hidden.bs.toast', function() {
         this.parentElement.remove();
     });
 }
 
-// Theme toggle enhancement
 function initThemeToggle() {
     const themeToggle = document.querySelector('a[href*="toggle_theme"]');
     if (themeToggle) {
         themeToggle.addEventListener('click', function(e) {
             e.preventDefault();
             
-            // Add loading state
             const icon = this.querySelector('.fas');
             const originalClass = icon.className;
             icon.className = 'fas fa-spinner fa-spin';
             
-            // Navigate after short delay for visual feedback
             setTimeout(() => {
                 window.location.href = this.href;
             }, 300);
@@ -272,10 +247,8 @@ function initThemeToggle() {
     }
 }
 
-// Initialize theme toggle on page load
 document.addEventListener('DOMContentLoaded', initThemeToggle);
 
-// Add smooth scrolling for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
@@ -289,7 +262,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Add loading states to form submissions
 document.querySelectorAll('form').forEach(form => {
     form.addEventListener('submit', function() {
         const submitButton = this.querySelector('button[type="submit"]');
@@ -300,7 +272,6 @@ document.querySelectorAll('form').forEach(form => {
             submitButton.innerHTML = `<i class="fas fa-spinner fa-spin me-2"></i>${loadingText}`;
             submitButton.disabled = true;
             
-            // Re-enable after timeout (fallback)
             setTimeout(() => {
                 submitButton.innerHTML = originalContent;
                 submitButton.disabled = false;
